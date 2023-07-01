@@ -5,21 +5,36 @@
 #include<errno.h>
 #include<signal.h>
 #include<sys/types.h>
+#include<sys/wait.h>
+#include<cstring>
 
 using namespace std;
 
-int main(){
-	char expr[256];
+void rundc(){
 	char *arg[]={"dc","-e","3 45 + p",NULL};
-	scanf("%s",expr);
 	if(execv("/usr/bin/dc",arg)==-1){
 		perror("dc error");
 	}
-	int result=kill(getpid(),SIGINT);
-	if(result==0){
-		printf("signal send success\n");
+	return;
+}
+
+void child(){
+	printf("this is child\n");
+	return;
+}
+
+int main(){
+	char expr[256];
+	int pid;
+	if((pid=fork())==0){
+		printf("this is son process\n");
+		rundc();//run dc process
 	}else{
-		perror("signal send error");
+		printf("this is father process\n");
+		//wait for child proc to finish
+		char buff[256];
+		//pid=wait(NULL);
+		printf("child process %d end\n",pid);
 	}
 	return 0;
 }
