@@ -3,7 +3,6 @@
 #include<stdlib.h>
 #include<unistd.h>
 #include<sys/wait.h>
-#include <termios.h>
 
 using namespace std;
 const int LINE_NUM=10;//每页显示10行
@@ -13,12 +12,6 @@ void displayFooter(){
 }
 
 int getopt(){
-    struct termios term;
-    tcgetattr(STDIN_FILENO, &term);
-
-    // 禁用标准输入的缓冲区
-    term.c_lflag &= ~(ICANON | ECHO);
-    tcsetattr(STDIN_FILENO, TCSANOW, &term);
     char opt;
     while((opt=getchar())!=EOF){
         if(opt==' '){
@@ -30,9 +23,6 @@ int getopt(){
             return -1;
         }
     }
-    // 恢复标准输入的缓冲区
-    term.c_lflag |= (ICANON | ECHO);
-    tcsetattr(STDIN_FILENO, TCSANOW, &term);
     return LINE_NUM;
 }
 
