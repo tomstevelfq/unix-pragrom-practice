@@ -13,14 +13,13 @@ void displayFooter(){
 }
 
 int getopt(){
-    struct termios term;
-    tcgetattr(STDIN_FILENO, &term);
-
-    // 禁用标准输入的缓冲区
-    term.c_lflag &= ~(ICANON | ECHO);
-    tcsetattr(STDIN_FILENO, TCSANOW, &term);
+    FILE *file=fopen("/dev/tty","r");
+    if(file==NULL){
+        perror("file open error");
+        exit(-1);
+    }
     char opt;
-    while((opt=getchar())!=EOF){
+    while((opt=fgetc(file))!=EOF){
         if(opt==' '){
             return 0;
         }else if(opt=='\n'){
@@ -30,19 +29,19 @@ int getopt(){
             return -1;
         }
     }
-    // 恢复标准输入的缓冲区
-    term.c_lflag |= (ICANON | ECHO);
-    tcsetattr(STDIN_FILENO, TCSANOW, &term);
+    fclose(file);
     return LINE_NUM;
 }
 
 int main(int argc,char *argv[]){
+    FILE *file;
+
     if(argc<2){
-        perror("参数错误");
-        exit(-1);
+        file=stdin;
+    }else{
+        file=fopen(argv[1],"r");
     }
 
-    FILE *file=fopen(argv[1],"r");
     if(file==NULL){
         perror("file open error");
         exit(-1);
