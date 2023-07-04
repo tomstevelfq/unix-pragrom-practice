@@ -7,3 +7,4 @@
 
 信号会打断sleep函数，当正在sleep时候一个信号被接收到并去执行这个回调函数回来后sleep语句被自动跳过了不管有没有sleep够
 总之，信号会使得sleep函数没有sleep够
+本质上是sleep函数一旦被中断就不能再继续sleep
