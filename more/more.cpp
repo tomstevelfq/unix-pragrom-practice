@@ -7,9 +7,10 @@
 
 using namespace std;
 const int LINE_NUM=10;//每页显示10行
+const char footer[]="\033[7m more? \033[m";
 
 void displayFooter(){
-    printf("\033[7m more? \033[m");
+    printf(footer);
 }
 
 int getopt(){
@@ -34,6 +35,7 @@ int getopt(){
 }
 
 int main(int argc,char *argv[]){
+    printf("%d\n",sizeof(footer));
     FILE *file;
 
     if(argc<2){
