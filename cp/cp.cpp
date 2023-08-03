@@ -5,19 +5,15 @@
 
 #define READ_LEN 100
 
-int main(int argc,char *argv[]){
-    if(argc<2){
-        perror("参数不够");
-        exit(-1);
-    }
-    int fd=open(argv[1],O_RDWR);
+void copy(const char *filename1,const char *filename2){
+    int fd=open(filename1,O_RDWR);
     if(fd==-1){
         perror("源文件");
         exit(-1);
     }
 
     // O_RDWR表示读写权限  O_TRUNC表示文件存在就将文件变成空文件 O_CREAT表示文件不存在就创建一个新文件
-    int dst=open(argv[2],O_RDWR|O_TRUNC|O_CREAT,0644);
+    int dst=open(filename2,O_RDWR|O_TRUNC|O_CREAT,0644);
     if(dst==-1){
         perror("目的文件");
         exit(-1);
@@ -33,5 +29,13 @@ int main(int argc,char *argv[]){
     if(close(fd)==-1||close(dst)==-1){
         perror("close");
     }
+}
+
+int main(int argc,char *argv[]){
+    if(argc<2){
+        perror("参数不够");
+        exit(-1);
+    }
+    copy(argv[1],argv[2]);
     return 0;
 }
